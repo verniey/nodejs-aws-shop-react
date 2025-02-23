@@ -1,0 +1,23 @@
+.classpath.txt
+target
+.classpath
+.project
+.idea/
+.settings/
+.vscode/
+*.iml
+
+# CDK asset staging directory
+.cdk.staging/
+cdk.out/
+
+# Maven dependencies
+.mvn/
+pom.xml.tag
+pom.xml.releaseBackup
+dependency-reduced-pom.xml
+buildNumber.properties
+
+# Logs
+logs/
+*.log
