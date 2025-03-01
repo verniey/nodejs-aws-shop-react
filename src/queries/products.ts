@@ -47,16 +47,29 @@ export function useRemoveProductCache() {
 }
 
 export function useUpsertAvailableProduct() {
-  return useMutation((values: AvailableProduct) => {
-    const url = `${API_PATHS.bff}/products`;
-    const method = values.id ? "put" : "post"; // Use PUT if `id` exists, otherwise POST
-    return axios[method]<AvailableProduct>(url, values, {
-      headers: {
-        Authorization: `Basic ${localStorage.getItem("authorization_token")}`,
+  const queryClient = useQueryClient(); // Access React Query cache
+
+  return useMutation(
+    (values: AvailableProduct) => {
+      const url = `${API_PATHS.bff}/products`;
+      const method = values.id ? "put" : "post"; // Use PUT if `id` exists, otherwise POST
+      return axios[method]<AvailableProduct>(url, {
+        ...values,
+        count: values.count ?? 0 // Ensure count is always sent
+      }, {
+        headers: {
+          Authorization: `Basic ${localStorage.getItem("authorization_token")}`,
+        },
+      });
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("available-products"); // Force refresh after mutation
       },
-    });
-  });
+    }
+  );
 }
+
 
 export function useDeleteAvailableProduct() {
   return useMutation((id: string) =>
