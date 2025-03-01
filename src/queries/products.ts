@@ -47,13 +47,15 @@ export function useRemoveProductCache() {
 }
 
 export function useUpsertAvailableProduct() {
-  return useMutation((values: AvailableProduct) =>
-    axios.put<AvailableProduct>(`${API_PATHS.bff}/product`, values, {
+  return useMutation((values: AvailableProduct) => {
+    const url = `${API_PATHS.bff}/products`;
+    const method = values.id ? "put" : "post"; // Use PUT if `id` exists, otherwise POST
+    return axios[method]<AvailableProduct>(url, values, {
       headers: {
         Authorization: `Basic ${localStorage.getItem("authorization_token")}`,
       },
-    })
-  );
+    });
+  });
 }
 
 export function useDeleteAvailableProduct() {
